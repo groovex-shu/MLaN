@@ -1,0 +1,17 @@
+numpy
+pandas
+opencv-python
+scipy
+redis
+requests
+responses
+attrs
+coloredlogs
+googleapis-common-protos
+grpcio
+protobuf
+pyyaml
+anyio
+h11
+jinja2
+pycurl

@@ -1,0 +1,25 @@
+Metadata-Version: 2.4
+Name: lovot_MLaNpy
+Version: 0.1.0
+Summary: Mapping, Localization and Navigation python package
+Author-email: shu-chiao <shuchiao.chiang@groove-x.com>, GROOVE X Developer Team <dev@groove-x.com>
+Project-URL: Homepage, https://github.com/groove-x/lovot-MLaN/
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: numpy
+Requires-Dist: pandas
+Requires-Dist: opencv-python
+Requires-Dist: scipy
+Requires-Dist: redis
+Requires-Dist: requests
+Requires-Dist: responses
+Requires-Dist: attrs
+Requires-Dist: coloredlogs
+Requires-Dist: googleapis-common-protos
+Requires-Dist: grpcio
+Requires-Dist: protobuf
+Requires-Dist: pyyaml
+Requires-Dist: anyio
+Requires-Dist: h11
+Requires-Dist: jinja2
+Requires-Dist: pycurl

@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lovot_MLaNpy"
+version = "0.1.0"
+description = "Mapping, Localization and Navigation python package"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+  { name = "shu-chiao", email = "shuchiao.chiang@groove-x.com"},
+  { name = "GROOVE X Developer Team", email = "dev@groove-x.com" }
+]
+dependencies = [
+  "numpy",
+  "pandas",
+  "opencv-python",
+  "scipy",
+  "redis",
+  "requests",
+  "responses",
+  "attrs",
+  "coloredlogs",
+  "googleapis-common-protos",
+  "grpcio",
+  "protobuf",
+  "pyyaml",
+  "anyio",
+  "h11",
+  "jinja2",
+  "pycurl"
+]
+
+[project.urls]
+Homepage = "https://github.com/groove-x/lovot-MLaN/"
+
+[project.scripts]
+run_slam = "lovot_slam.main:run"
+run_wireless_localization = "lovot_slam.main_wifi:run"
+lovot_slam_tools = "lovot_slam.tools.main:run"
+
+[tool.setuptools.packages.find]
+# Find all packages, exclude tests
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+"*" = [
+    "html/index.html",
+    "html/index_lovot.js",
+    "html/index_nest.js",
+    "viewer/static/*"
+]

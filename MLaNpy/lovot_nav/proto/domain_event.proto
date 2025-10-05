@@ -1,0 +1,107 @@
+syntax = "proto3";
+package lovot.navigation;
+import "navigation.proto";
+
+option go_package = "github.com/groove-x/lovot-apis/lovot/navigation";
+
+// ネストで発生した HomeMapEvent は PubSub の Navigation Topic 経由で navigation-svc で処理される
+// MapEvent として Event History に永続化するかも
+message HomeMapEvent {
+  enum Event {
+    // 不明
+    unknown = 0;
+    // 地図が生成された
+    home_map_generated = 1;
+    // 地図がリセットされた
+    home_map_reset = 2;
+  }
+  string  colony_id = 1;
+  string  map_id    = 2;
+  Event   event     = 3;
+  HomeMap home_map  = 4;
+}
+
+// ネストで発生した ProhibitedAreaEvent は PubSub の Navigation Topic 経由で navigation-svc で処理される
+// MapEvent として Event History に永続化するかも
+message ProhibitedAreaEvent {
+  enum Event {
+    // 不明
+    unknown = 0;
+    // 禁止エリアが追加された
+    prohibited_area_registered = 1;
+    // 禁止エリアが更新された
+    prohibited_area_updated = 2;
+    // 禁止エリアが削除された
+    prohibited_area_deleted = 3;
+  }
+  string         colony_id = 1;
+  string         map_id    = 2;
+  string         area_id   = 3;
+  Event          event     = 4;
+  ProhibitedArea area      = 5;
+}
+
+// ネストで発生した UnwelcomedAreaEvent は PubSub の Navigation Topic 経由で navigation-svc で処理される
+message UnwelcomedAreaEvent {
+  enum Event {
+    // 不明
+    unknown = 0;
+    // 来ないでエリアが更新された
+    unwelcomed_area_updated = 1;
+  }
+  string         colony_id = 1;
+  string         map_id    = 2;
+  string         area_id   = 3;
+  Event          event     = 4;
+  UnwelcomedArea area      = 5;
+}
+
+// ネストで発生した SpotEvent は PubSub の Navigation Topic 経由で navigation-svc で処理される
+// MapEvent として Event History に永続化するかも
+message SpotEvent {
+  enum Event {
+    // 不明
+    unknown = 0;
+    // スポットが追加された
+    spot_registered = 1;
+    // スポットが更新された
+    spot_updated = 2;
+    // スポットが削除された
+    spot_deleted = 3;
+  }
+  string colony_id = 1;
+  string map_id    = 2;
+  string spot_name = 3;
+  Event  event     = 4;
+  Spot   spot      = 5;
+}
+
+// NeoDM から agent 経由でクラウドに流し込む
+message LovotPoseEvent {
+  enum Event {
+    // 不明
+    unknown = 0;
+    // 自己位置が更新された
+    lovot_pose_updated = 1;
+  }
+  string     ghost_id = 1;
+  string     map_id   = 2;
+  Event      event    = 3;
+  Coordinate pose     = 4;
+}
+
+// NeoDM から agent 経由でクラウドに流し込む
+message DestinationEvent {
+  enum Event {
+    // 不明
+    unknown = 0;
+    // 目的地が更新された
+    destination_updated = 1;
+    // 目的地が削除された
+    destination_removed = 2;
+  }
+  string     ghost_id    = 1;
+  string     map_id      = 2;
+  Event      event       = 3;
+  Coordinate destination = 4;
+}

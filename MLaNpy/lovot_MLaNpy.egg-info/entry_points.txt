@@ -1,0 +1,4 @@
+[console_scripts]
+lovot_slam_tools = lovot_slam.tools.main:run
+run_slam = lovot_slam.main:run
+run_wireless_localization = lovot_slam.main_wifi:run

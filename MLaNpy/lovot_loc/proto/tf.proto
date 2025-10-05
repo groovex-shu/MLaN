@@ -1,0 +1,93 @@
+syntax = "proto3";
+package lovot_tf.tf;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/groove-x/lovot-apis/lovot-tf/tf";
+
+service TfService {
+  rpc GetTransform(GetTransformRequest) returns (GetTransformResponse) {}
+  rpc SetTransform(SetTransformRequest) returns (SetTransformResponse) {}
+  rpc SetTransforms(SetTransformsRequest) returns (SetTransformsResponse) {}
+  rpc Clear(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  rpc GetAllFrames(GetAllFramesRequest) returns (GetAllFramesResponse) {}
+}
+
+message Header {
+  int32                     seq      = 1;
+  google.protobuf.Timestamp stamp    = 2;
+  string                    frame_id = 3;
+}
+
+message Vector3 {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}
+
+message Quaternion {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+  float w = 4;
+}
+
+message Transform {
+  Vector3    translation = 1;
+  Quaternion rotation    = 2;
+}
+
+message TransformStamped {
+  Header    header         = 1;
+  string    child_frame_id = 2;
+  Transform transform      = 3;
+}
+
+message GetTransformRequest {
+  string                    child_frame_id  = 1;
+  string                    parent_frame_id = 2;
+  google.protobuf.Timestamp stamp           = 3;
+  string                    fixed_frame_id  = 4;
+  google.protobuf.Timestamp child_stamp     = 5;
+  google.protobuf.Timestamp parent_stamp    = 6;
+}
+
+message GetTransformResponse {
+  TransformStamped transform_stamped = 1;
+  reserved 2;
+}
+
+message SetTransformRequest {
+  TransformStamped transform_stamped = 1;
+  string           authority         = 2;
+  bool             is_static         = 3;
+}
+
+message SetTransformResponse {
+  bool result = 1;
+}
+
+message SetTransformsRequest {
+  repeated TransformStamped transforms_stamped = 1;
+  string                    authority          = 2;
+  bool                      is_static          = 3;
+}
+
+message SetTransformsResponse {
+  repeated bool results = 1;
+}
+
+message GetAllFramesRequest {
+  enum StringMode {
+    YAML   = 0;
+    DOT    = 1;
+    STRING = 2;
+  }
+  StringMode                mode         = 1;
+  google.protobuf.Timestamp current_time = 2;
+}
+
+message GetAllFramesResponse {
+  string frames_info = 1;
+}

@@ -1,0 +1,886 @@
+missions:
+  - mission_id: 00cfd434fdbe07180e00000000000000
+    mission_number: 0
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 131
+      landmarks:
+        total: 35246
+        by_camera:
+          - camera_id: 0
+            total: 35246
+            good: 2243
+            bad: 33003
+            unknown: 0
+      observations: 104326
+      edges:
+        imu: 130
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 15.72852240283926
+      time_range:
+        start_time: 2024_11_14_14_31_37
+        end_time: 2024_11_14_14_33_36
+        start_time_ns: 1731562297299357891
+        end_time_ns: 1731562416640685558
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 6d9af4879fc407180e00000000000000
+    mission_number: 1
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 103
+      landmarks:
+        total: 27844
+        by_camera:
+          - camera_id: 0
+            total: 27844
+            good: 1929
+            bad: 25915
+            unknown: 0
+      observations: 86519
+      edges:
+        imu: 102
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 14.92233771959994
+      time_range:
+        start_time: 2024_11_14_16_15_46
+        end_time: 2024_11_14_16_17_31
+        start_time_ns: 1731568546314517259
+        end_time_ns: 1731568651705625534
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 0af4f0d64cca07180e00000000000000
+    mission_number: 2
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 107
+      landmarks:
+        total: 28222
+        by_camera:
+          - camera_id: 0
+            total: 28222
+            good: 1785
+            bad: 26437
+            unknown: 0
+      observations: 90040
+      edges:
+        imu: 106
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 13.74967202202891
+      time_range:
+        start_time: 2024_11_14_17_59_51
+        end_time: 2024_11_14_18_01_37
+        start_time_ns: 1731574791254421472
+        end_time_ns: 1731574897442672729
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 975fb6852ed007180e00000000000000
+    mission_number: 3
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 101
+      landmarks:
+        total: 35458
+        by_camera:
+          - camera_id: 0
+            total: 35458
+            good: 2565
+            bad: 32893
+            unknown: 0
+      observations: 90215
+      edges:
+        imu: 100
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 14.48347198375128
+      time_range:
+        start_time: 2024_11_14_19_47_09
+        end_time: 2024_11_14_19_48_54
+        start_time_ns: 1731581229546043634
+        end_time_ns: 1731581334839092016
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 7f756a80c10308180e00000000000000
+    mission_number: 4
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 113
+      landmarks:
+        total: 28724
+        by_camera:
+          - camera_id: 0
+            total: 28724
+            good: 1961
+            bad: 26763
+            unknown: 0
+      observations: 91931
+      edges:
+        imu: 112
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 16.54885083284574
+      time_range:
+        start_time: 2024_11_15_11_32_33
+        end_time: 2024_11_15_11_34_19
+        start_time_ns: 1731637953554522752
+        end_time_ns: 1731638059245987415
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 9c7fe78e7e0908180e00000000000000
+    mission_number: 5
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 114
+      landmarks:
+        total: 28537
+        by_camera:
+          - camera_id: 0
+            total: 28537
+            good: 1655
+            bad: 26882
+            unknown: 0
+      observations: 89081
+      edges:
+        imu: 113
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 15.53193284268818
+      time_range:
+        start_time: 2024_11_15_13_17_38
+        end_time: 2024_11_15_13_19_24
+        start_time_ns: 1731644258206313371
+        end_time_ns: 1731644364351267814
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: e3d17d69d31408180e00000000000000
+    mission_number: 6
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 161
+      landmarks:
+        total: 28722
+        by_camera:
+          - camera_id: 0
+            total: 28722
+            good: 2022
+            bad: 26700
+            unknown: 0
+      observations: 117582
+      edges:
+        imu: 160
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 15.13132315002582
+      time_range:
+        start_time: 2024_11_15_16_45_20
+        end_time: 2024_11_15_16_47_11
+        start_time_ns: 1731656720492947340
+        end_time_ns: 1731656831740543127
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 75d1a0e7690209180e00000000000000
+    mission_number: 7
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 114
+      landmarks:
+        total: 28872
+        by_camera:
+          - camera_id: 0
+            total: 28872
+            good: 2364
+            bad: 26508
+            unknown: 0
+      observations: 87968
+      edges:
+        imu: 113
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 16.62023130072859
+      time_range:
+        start_time: 2024_11_18_17_17_58
+        end_time: 2024_11_18_17_19_44
+        start_time_ns: 1731917878215287446
+        end_time_ns: 1731917984211374759
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 9489ceda00140b180e00000000000000
+    mission_number: 8
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 112
+      landmarks:
+        total: 31238
+        by_camera:
+          - camera_id: 0
+            total: 31238
+            good: 2101
+            bad: 29137
+            unknown: 0
+      observations: 90523
+      edges:
+        imu: 111
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 17.75871406395809
+      time_range:
+        start_time: 2024_11_25_11_01_22
+        end_time: 2024_11_25_11_03_10
+        start_time_ns: 1732500082208098649
+        end_time_ns: 1732500190598147630
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: ea59d19fee190b180e00000000000000
+    mission_number: 9
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 140
+      landmarks:
+        total: 28479
+        by_camera:
+          - camera_id: 0
+            total: 28479
+            good: 1175
+            bad: 27304
+            unknown: 0
+      observations: 92117
+      edges:
+        imu: 139
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 13.37048626352873
+      time_range:
+        start_time: 2024_11_25_12_52_26
+        end_time: 2024_11_25_12_54_18
+        start_time_ns: 1732506746193665027
+        end_time_ns: 1732506858335340499
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 9f4f53bed51f0b180e00000000000000
+    mission_number: 10
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 106
+      landmarks:
+        total: 30383
+        by_camera:
+          - camera_id: 0
+            total: 30383
+            good: 2383
+            bad: 28000
+            unknown: 0
+      observations: 91122
+      edges:
+        imu: 105
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 16.98126209523501
+      time_range:
+        start_time: 2024_11_25_14_40_48
+        end_time: 2024_11_25_14_42_34
+        start_time_ns: 1732513248106462001
+        end_time_ns: 1732513354099363803
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: d40bd6dbba250b180e00000000000000
+    mission_number: 11
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 107
+      landmarks:
+        total: 28911
+        by_camera:
+          - camera_id: 0
+            total: 28911
+            good: 2416
+            bad: 26495
+            unknown: 0
+      observations: 89642
+      edges:
+        imu: 106
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 16.92131251162438
+      time_range:
+        start_time: 2024_11_25_16_28_44
+        end_time: 2024_11_25_16_30_31
+        start_time_ns: 1732519724727259874
+        end_time_ns: 1732519831418569803
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 5d0ed9f6aa2c0b180e00000000000000
+    mission_number: 12
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 111
+      landmarks:
+        total: 26361
+        by_camera:
+          - camera_id: 0
+            total: 26361
+            good: 1674
+            bad: 24687
+            unknown: 0
+      observations: 89994
+      edges:
+        imu: 110
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 17.43530673436359
+      time_range:
+        start_time: 2024_11_25_18_34_48
+        end_time: 2024_11_25_18_36_35
+        start_time_ns: 1732527288955899953
+        end_time_ns: 1732527395395490407
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 619a837cc8330b180e00000000000000
+    mission_number: 13
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 107
+      landmarks:
+        total: 28177
+        by_camera:
+          - camera_id: 0
+            total: 28177
+            good: 1599
+            bad: 26578
+            unknown: 0
+      observations: 91383
+      edges:
+        imu: 106
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 16.01186908303411
+      time_range:
+        start_time: 2024_11_25_20_46_06
+        end_time: 2024_11_25_20_47_53
+        start_time_ns: 1732535166775327444
+        end_time_ns: 1732535273919957876
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 0214b9853d370b180e00000000000000
+    mission_number: 14
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 118
+      landmarks:
+        total: 35837
+        by_camera:
+          - camera_id: 0
+            total: 35837
+            good: 2594
+            bad: 33243
+            unknown: 0
+      observations: 102454
+      edges:
+        imu: 117
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 13.699799677838
+      time_range:
+        start_time: 2024_11_25_21_49_50
+        end_time: 2024_11_25_21_51_38
+        start_time_ns: 1732538990632491111
+        end_time_ns: 1732539098071276664
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 7ec7dc5d48690b180e00000000000000
+    mission_number: 15
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 112
+      landmarks:
+        total: 29480
+        by_camera:
+          - camera_id: 0
+            total: 29480
+            good: 2504
+            bad: 26976
+            unknown: 0
+      observations: 90947
+      edges:
+        imu: 111
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 16.32972329609182
+      time_range:
+        start_time: 2024_11_26_13_06_38
+        end_time: 2024_11_26_13_08_26
+        start_time_ns: 1732593998878922700
+        end_time_ns: 1732594106106602191
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 36e0ae387f700b180e00000000000000
+    mission_number: 16
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 105
+      landmarks:
+        total: 29243
+        by_camera:
+          - camera_id: 0
+            total: 29243
+            good: 2183
+            bad: 27060
+            unknown: 0
+      observations: 87144
+      edges:
+        imu: 104
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 16.56183337924831
+      time_range:
+        start_time: 2024_11_26_15_18_27
+        end_time: 2024_11_26_15_20_14
+        start_time_ns: 1732601907550688982
+        end_time_ns: 1732602014589658737
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: be00503956760b180e00000000000000
+    mission_number: 17
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 107
+      landmarks:
+        total: 28389
+        by_camera:
+          - camera_id: 0
+            total: 28389
+            good: 2128
+            bad: 26261
+            unknown: 0
+      observations: 86050
+      edges:
+        imu: 106
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 16.86535855224306
+      time_range:
+        start_time: 2024_11_26_17_04_37
+        end_time: 2024_11_26_17_06_23
+        start_time_ns: 1732608277004272937
+        end_time_ns: 1732608383497026920
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 36630a66017c0b180e00000000000000
+    mission_number: 18
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 117
+      landmarks:
+        total: 29060
+        by_camera:
+          - camera_id: 0
+            total: 29060
+            good: 1352
+            bad: 27708
+            unknown: 0
+      observations: 94285
+      edges:
+        imu: 116
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 14.87793762601763
+      time_range:
+        start_time: 2024_11_26_18_49_09
+        end_time: 2024_11_26_18_50_56
+        start_time_ns: 1732614549494515180
+        end_time_ns: 1732614656183661222
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: a5702d0503b80b180e00000000000000
+    mission_number: 19
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 114
+      landmarks:
+        total: 31721
+        by_camera:
+          - camera_id: 0
+            total: 31721
+            good: 2781
+            bad: 28940
+            unknown: 0
+      observations: 91622
+      edges:
+        imu: 113
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 16.83038276473152
+      time_range:
+        start_time: 2024_11_27_13_08_17
+        end_time: 2024_11_27_13_10_04
+        start_time_ns: 1732680497610087871
+        end_time_ns: 1732680604554384469
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 59dbbaccbdbd0b180e00000000000000
+    mission_number: 20
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 114
+      landmarks:
+        total: 30540
+        by_camera:
+          - camera_id: 0
+            total: 30540
+            good: 2431
+            bad: 28109
+            unknown: 0
+      observations: 97809
+      edges:
+        imu: 113
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 16.46173436416046
+      time_range:
+        start_time: 2024_11_27_14_52_37
+        end_time: 2024_11_27_14_54_24
+        start_time_ns: 1732686757383228063
+        end_time_ns: 1732686864179400444
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: cfa50add81d525180e00000000000000
+    mission_number: 21
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 111
+      landmarks:
+        total: 28753
+        by_camera:
+          - camera_id: 0
+            total: 28753
+            good: 1910
+            bad: 26843
+            unknown: 0
+      observations: 82672
+      edges:
+        imu: 110
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 15.42358806566399
+      time_range:
+        start_time: 2025_02_20_15_02_24
+        end_time: 2025_02_20_15_04_11
+        start_time_ns: 1740031344080296754
+        end_time_ns: 1740031451019950389
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+  - mission_id: 1fab8423bba134180e00000000000000
+    mission_number: 22
+    mission_type: Viwls
+    sensors:
+      ncamera: f659a2a87d49a62ef7c6f001c1aeef50
+      imu:
+        - c63aecb41bfdfd6b7e1fac37c7cbe7bf
+      relative_6dof_pose: ~
+      gps_utm: ~
+      gps_wgs: ~
+      lidar: ~
+    statistics:
+      vertices: 119
+      landmarks:
+        total: 30993
+        by_camera:
+          - camera_id: 0
+            total: 30993
+            good: 1435
+            bad: 29558
+            unknown: 0
+      observations: 82477
+      edges:
+        imu: 118
+        wheel_odometry: 0
+        loop_closure: 0
+      distance_travelled_m: 13.60439118361563
+      time_range:
+        start_time: 2025_04_09_20_02_11
+        end_time: 2025_04_09_20_04_01
+        start_time_ns: 1744196531472218990
+        end_time_ns: 1744196641862570285
+      baseframe_known: true
+      optional_sensor_measurements:
+        gps_utm:
+          {}
+        gps_wgs:
+          {}
+accumulated_stats:
+  num_missions: 23
+  total_vertices: 2644
+  total_landmarks:
+    total: 689190
+    good: 47190
+    bad: 642000
+    unknown: 0
+  total_observations: 2117903
+  total_distance_travelled_m: 361.850041915862
+  total_duration_s: 2478.05180359

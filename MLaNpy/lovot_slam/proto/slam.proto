@@ -1,0 +1,199 @@
+syntax = "proto3";
+
+package lovot_spike_svcs.slam;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "navigation.proto";
+
+option go_package = "github.com/groove-x/lovot-apis/lovot-spike-svcs/slam";
+
+service Slam {
+  rpc PushBag(stream PushBagRequest) returns (PushBagResponse) {}
+  rpc ListMap(google.protobuf.Empty) returns (ListMapResponse) {}
+  rpc PullMap(PullMapRequest) returns (stream PullMapResponse) {}
+  rpc GetStatus(GetStatusRequest) returns (GetStatusResponse) {}
+  rpc BuildSingleMissionMap(BuildSingleMissionMapRequest) returns (google.protobuf.Empty) {}
+  rpc GetExplorationArea(GetExplorationAreaRequest) returns (GetExplorationAreaResponse) {}
+  rpc GetFrontier(GetFrontierRequest) returns (GetFrontierResponse) {}
+  rpc GetLatestMap(google.protobuf.Empty) returns (GetLatestMapResponse) {}
+  rpc GetMergedProhibitedArea(google.protobuf.Empty) returns (GetMergedProhibitedAreaResponse) {}
+  rpc CheckExploreRights(CheckExploreRightsRequest) returns (CheckExploreRightsResponse) {}
+  rpc GetSpots(GetSpotsRequest) returns (GetSpotsResponse) {}
+  rpc SetSpots(SetSpotsRequest) returns (google.protobuf.Empty) {}
+  rpc GetUnwelcomedArea(google.protobuf.Empty) returns (GetUnwelcomedAreaResponse) {}
+  rpc PushLocalizationAccuracy(PushLocalizationAccuracyRequest) returns (google.protobuf.Empty) {}
+  rpc UploadFile(stream UploadFileRequest) returns (UploadFileResponse) {}
+  rpc DownloadFile(DownloadFileRequest) returns (stream DownloadFileResponse) {}
+}
+
+message CheckExploreRightsRequest {
+  string ghost_id = 1;
+}
+
+message CheckExploreRightsResponse {
+  bool   success = 1;
+  string token   = 2;
+}
+
+message Coordinate {
+  float px = 1;
+  float py = 2;
+  float pz = 3;
+  float ox = 4;
+  float oy = 5;
+  float oz = 6;
+  float ow = 7;
+}
+
+message Area {
+  Coordinate coordinate = 1;
+  float      area       = 2;
+}
+
+message Spot {
+  string     name       = 1;
+  Coordinate coordinate = 2;
+}
+
+message PushBagRequest {
+  string name = 1;
+  bytes  data = 2;
+}
+
+message PushBagResponse {
+  string message = 1;
+  string md5     = 2;
+}
+
+message ListMapResponse {
+  repeated string map_name = 1;
+}
+
+message BuildSingleMissionMapRequest {
+  string map_name = 1;
+}
+
+message PullMapRequest {
+  string map_name = 1;
+}
+
+message PullMapResponse {
+  bytes  data = 1;
+  string md5  = 2;
+}
+
+message GetStatusRequest {
+  string job_id = 1;
+}
+
+message GetStatusResponse {
+  string status = 1;
+}
+
+message GetExplorationAreaRequest {
+  string map_name = 1;
+}
+
+message GetExplorationAreaResponse {
+  string        map_name         = 1;
+  repeated Area exploration_area = 2;
+}
+
+// 探索対象の地図と探索開始点を指定
+message GetFrontierRequest {
+  string     map_name = 1;
+  Coordinate pose     = 2;
+}
+
+// 探索対象の地図と、Frontier (UnknownとNo Obstacleの境界)を全て返す
+message GetFrontierResponse {
+  string              map_name = 1;
+  repeated Coordinate pose     = 2;
+}
+
+message GetLatestMapResponse {
+  string map_name = 1;
+}
+
+// Nestに登録されている複数の進入禁止エリアをマージして返す
+// TODO: remove it
+message GetMergedProhibitedAreaResponse {
+  lovot.navigation.ProhibitedArea area = 1;
+}
+
+// Nestに登録されている位置情報の問い合わせ (複数指定可能)
+message GetSpotsRequest {
+  repeated string spot_names = 1;
+}
+
+// 位置情報の通知
+message GetSpotsResponse {
+  repeated Spot spots = 1;
+}
+
+// 位置情報をNestに通知する
+message SetSpotsRequest {
+  repeated Spot spots = 1;
+}
+
+// 来ないでエリア
+message GetUnwelcomedAreaResponse {
+  string unwelcomed_area = 1;
+}
+
+// 位置推定精度
+message PushLocalizationAccuracyRequest {
+  string ghost_id = 1;
+  float  accuracy = 2;
+}
+
+// 転送時のファイル情報
+message FileInformation {
+  // ファイルの形式 (accuracy_map, rosbag, etc)
+  string type = 1;
+  // ファイル名
+  string name = 2;
+  // ファイルのtimestamp
+  google.protobuf.Timestamp timestamp = 3;
+  // ファイルのmd5
+  string md5 = 4;
+  // metadata (jsonを想定)
+  string metadata = 5;
+}
+
+// Lovot->Nestのファイル転送
+message UploadFileRequest {
+  // ファイルのバイナリ (stream)
+  bytes data = 1;
+  oneof information_optional {
+    // streamの初回のみ送ることを想定
+    FileInformation information = 2;
+  }
+}
+
+// Lovot->Nestのファイル転送のResponse
+message UploadFileResponse {
+  // "ok" or "err"
+  string status = 1;
+  // message (e.g. "md5 unmatch error")
+  string message = 2;
+}
+
+// Nest->Lovotのファイル転送
+message DownloadFileRequest {
+  // ファイルの形式 (segmentation, map, etc)
+  string type = 1;
+  // metadata (jsonを想定, applicationで不要な場合は無視)
+  string metadata = 2;
+}
+
+// Nest->Lovotのファイル転送のResponse
+message DownloadFileResponse {
+  // ファイルのバイナリ (stream)
+  bytes data = 1;
+  oneof information_optional {
+    // streamの初回のみ送ることを想定
+    FileInformation information = 2;
+  }
+}

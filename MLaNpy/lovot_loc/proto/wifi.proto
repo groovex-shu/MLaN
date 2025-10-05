@@ -1,0 +1,128 @@
+syntax = "proto3";
+package lovot_minid.wifi;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/groove-x/lovot-apis/lovot-minid/wifi";
+
+service WifiService {
+  rpc AddAP(AddAPRequest) returns (google.protobuf.Empty) {}
+  rpc DeleteAP(DeleteAPRequest) returns (google.protobuf.Empty) {}
+  rpc AddNestAP(AddNestAPRequest) returns (google.protobuf.Empty) {}
+  rpc AddHomeRouterAP(AddHomeRouterAPRequest) returns (google.protobuf.Empty) {}
+  rpc AddConnectorAP(AddConnectorAPRequest) returns (google.protobuf.Empty) {}
+  rpc DeleteHomeRouterAP(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  rpc GetAvailableAP(google.protobuf.Empty) returns (GetAvailableAPResponse) {}
+  rpc ConnectToAP(ConnectToAPRequest) returns (google.protobuf.Empty) {}
+  rpc Disconnect(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  rpc FindNestAPWithInetConn(FindNestAPWithInetConnRequest) returns (FindNestAPWithInetConnResponse) {}
+  rpc GetTargetSSID(google.protobuf.Empty) returns (GetTargetSSIDResponse) {}
+  rpc GetActiveAccessPoint(google.protobuf.Empty) returns (GetActiveAccessPointResponse) {}
+  rpc GetState(google.protobuf.Empty) returns (GetStateResponse) {}
+  rpc GetTargetAP(google.protobuf.Empty) returns (GetTargetAPResponse) {}
+}
+
+message AP {
+  string ssid         = 1;
+  uint32 flags        = 2;
+  uint32 strength     = 3;
+  uint32 frequency    = 4;
+  string hw_address   = 5;
+  uint32 max_bitrate  = 6;
+  bool   is_connected = 7;
+  int32  last_seen    = 8;
+}
+
+message AddAPRequest {
+  string ssid          = 1;
+  string password      = 2;
+  uint32 priority      = 3;
+  bool   auto_connect  = 4;
+  string connection_id = 5;  // connection_idが指定されない場合(=空文字の場合)は、ssidをconnection_idとする。
+}
+
+message DeleteAPRequest {
+  string ssid = 1;
+}
+
+message AddNestAPRequest {
+  string device_id = 1;
+  uint32 priority  = 2;
+}
+
+message GetAvailableAPResponse {
+  repeated AP ap = 1;
+}
+
+message ConnectToAPRequest {
+  message Option {
+    int32 signal_strength_threshold = 1;
+  }
+
+  string ssid   = 1;
+  Option option = 2;
+}
+
+message FindNestAPWithInetConnRequest {
+  repeated string ping_target = 1;
+}
+
+message FindNestAPWithInetConnResponse {
+  string device_id = 1;
+}
+
+message GetTargetSSIDResponse {
+  string ssid = 1;
+}
+
+message GetActiveAccessPointResponse {
+  AP ap = 1;
+}
+
+message AddHomeRouterAPRequest {
+  string ssid     = 1;
+  string password = 2;
+}
+
+message AddConnectorAPRequest {
+  string ssid = 1;
+}
+
+enum NMDeviceState {
+  StateUnknown      = 0;
+  StateUnmanaged    = 10;
+  StateUnavailable  = 20;
+  StateDisconnected = 30;
+  StatePrepare      = 40;
+  StateConfig       = 50;
+  StateNeedAuth     = 60;
+  StateIPConfig     = 70;
+  StateIPCheck      = 80;
+  StateSecondaries  = 90;
+  StateActivated    = 100;
+  StateDeactivating = 110;
+  StateFailed       = 120;
+}
+
+message GetStateResponse {
+  NMDeviceState state = 1;
+}
+
+enum APType {
+  User         = 0;
+  NearbyFriend = 10;  // 近くのLTEモバイルルータやCORO1 NEST APなど
+  Connector    = 15;  // colony情報に含まれている接続対象
+  Nest         = 20;
+  HomeRouter   = 30;
+  Teamx        = 40;
+  Factoryx     = 50;
+  Supportx     = 60;
+}
+
+message GetTargetAPResponse {
+  AP     ap            = 1;
+  string password      = 2;
+  string connection_id = 3;  // 空の場合、connection が未生成状態
+  APType ap_type       = 4;
+  string network_type  = 5;
+}

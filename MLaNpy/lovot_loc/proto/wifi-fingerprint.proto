@@ -1,0 +1,54 @@
+syntax = "proto3";
+package lovot_localization;
+
+import "google/protobuf/timestamp.proto";
+import "wifi.proto";
+import "tf.proto";
+
+option go_package = "github.com/groove-x/lovot-apis/lovot-localization";
+
+message Covariance {
+  google.protobuf.Timestamp stamp  = 1;
+  repeated float            matrix = 2;
+}
+
+message Reliability {
+  google.protobuf.Timestamp stamp       = 1;
+  float                     reliability = 2;
+  float                     detection   = 3;
+  float                     likelihood  = 4;
+}
+
+enum Localizer {
+  NONE   = 0;
+  VISUAL = 1;
+  DEPTH  = 2;
+}
+
+message TransformEstimation {
+  google.protobuf.Timestamp stamp     = 1;
+  lovot_tf.tf.Transform     transform = 2;
+
+  // identifier of map (currently only "1")
+  string map_id = 3;
+  // name of an unique map (e.g. 20221222_063639_c40877e5e9fb9a7a6aa37648328fa5fb)
+  string map_name = 4;
+  // localization estimator
+  Localizer localizer = 5;
+  // confidence matrix of 3x3 or 6x6
+  Covariance covariance = 6;
+  // reliability of the localization (0.0 - 1.0)
+  Reliability reliability = 7;
+}
+
+message Fingerprint {
+  google.protobuf.Timestamp stamp     = 1;
+  string                    device_id = 2;
+
+  map<string, lovot_minid.wifi.AP> access_points = 3;  // hw_address -> AccessPoint
+  TransformEstimation              transform     = 4;
+}
+
+message RadioMap {
+  repeated Fingerprint fingerprints = 1;
+}

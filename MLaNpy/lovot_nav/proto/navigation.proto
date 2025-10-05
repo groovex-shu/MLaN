@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package lovot.navigation;
+
+option go_package = "github.com/groove-x/lovot-apis/lovot/navigation";
+
+// 禁止エリア、スポット込みの地図情報
+message DecoratedMap {
+  HomeMap                 home_map         = 1;
+  repeated ProhibitedArea areas            = 2;
+  repeated Spot           spots            = 3;
+  repeated UnwelcomedArea unwelcomed_areas = 4;
+}
+
+message HomeMap {
+  // コロニーの識別子
+  string colony_id = 1;
+  // 地図の識別子。当面は "1" のみ
+  string map_id = 2;
+  // 地図の名前 (optional)
+  string name = 3;
+  // 地図の幅
+  int32 width = 4;
+  // 地図の高さ
+  int32 height = 5;
+  // 地図の解像度
+  float resolution = 6;
+  // 地図データ
+  string data = 7;
+  // 地図の原点座標
+  Coordinate origin = 8;
+  // 地図が完成していれば true
+  bool completed = 9;
+  // 地図データ（玄関位置として設定可能なエリア）
+  string data_navigatable = 10;
+}
+
+message ProhibitedArea {
+  // 禁止エリアの識別子: Create の引数として渡されたときは無視される
+  string area_id = 1;
+  // コロニーの識別子
+  string colony_id = 2;
+  // 地図の識別子。当面は "1" のみ
+  string map_id = 3;
+  // 禁止エリアの幅
+  int32 width = 4;
+  // 禁止エリアの高さ
+  int32 height = 5;
+  // 禁止エリアの解像度
+  float resolution = 6;
+  // 禁止エリアのデータ
+  string data = 7;
+  // 禁止エリアの座標
+  Coordinate origin = 8;
+}
+
+message ProhibitedAreaList {
+  repeated lovot.navigation.ProhibitedArea areas = 1;
+}
+
+message UnwelcomedArea {
+  // 来ないでエリアの識別子。"1"のみ使用している
+  string area_id = 1;
+  // コロニーの識別子
+  string colony_id = 2;
+  // 地図の識別子。当面は "1" のみ
+  string map_id = 3;
+  // 来ないでエリアのデータ
+  string data = 4;
+}
+
+message Spot {
+  // コロニーの識別子
+  string colony_id = 1;
+  // 地図の識別子。当面は "1" のみ
+  string map_id = 2;
+  // スポットの名前: 当面は "entrance" のみ
+  string name = 3;
+  // スポットの座標
+  Coordinate coordinate = 4;
+}
+
+message SpotList {
+  repeated lovot.navigation.Spot spots = 1;
+}
+
+message Coordinate {
+  float px = 1;
+  float py = 2;
+  float pz = 3;
+  float ox = 4;
+  float oy = 5;
+  float oz = 6;
+  float ow = 7;
+}
+
+message Pose {
+  // 地図の識別子。当面は "1" のみ
+  string map_id = 1;
+  // 位置
+  Coordinate coordinate = 2;
+}
+
+message CovarianceMatrix {
+  // 3x3(2次元3自由度) or 6x6(3次元6自由度)の行列
+  uint32         rows = 1;
+  uint32         cols = 2;
+  repeated float data = 3 [packed = true];
+}
+
+message PoseWithCovariance {
+  // 地図の識別子。当面は "1" のみ
+  string map_id = 1;
+  // 位置
+  Coordinate coordinate = 2;
+  // 共分散行列
+  CovarianceMatrix covariance = 3;
+  // 位置推定器
+  string localizer = 4;
+}
