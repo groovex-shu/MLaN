@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package lovot_app_api;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-swagger/options/annotations.proto";
+import "navigation.proto";
+import "rpc.proto";
+
+
+option go_package = "github.com/groove-x/lovot-apis/lovot-app-api";
+
+service NavigationService {
+  // 地図をリセットする
+  rpc ResetMap(lovot.navigation.ResetMapRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/maps/{map_id}/reset"
+    };
+  }
+
+  // 来ないでエリアを更新する
+  rpc SetUnwelcomedArea(lovot.navigation.SetUnwelcomedAreaRequest) returns (lovot.navigation.UnwelcomedArea) {
+    option (google.api.http) = {
+      put: "/v1/maps/{map_id}/unwelcomed_areas/{area_id}"
+      body: "*"
+    };
+  }
+
+  // スポットの座標を更新する
+  rpc SetSpotCoordinate(lovot.navigation.SetSpotCoordinateRequest) returns (lovot.navigation.Spot) {
+    option (google.api.http) = {
+      post: "/v1/maps/{map_id}/spots/{spot_name}"
+      body: "*"
+    };
+  }
+
+  // スポットを削除する
+  rpc DeleteSpot(lovot.navigation.DeleteSpotRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/maps/{map_id}/spots/{spot_name}"
+    };
+  }
+
+  // LOVOT の自己位置を取得する
+  rpc GetLovotPose(lovot.navigation.GetLovotPoseRequest) returns (lovot.navigation.Pose) {
+    option (google.api.http) = {
+      get: "/v1/navigation/lovot_pose"
+    };
+  }
+
+  // LOVOT の目的地を取得する
+  rpc GetDestination(lovot.navigation.GetDestinationRequest) returns (lovot.navigation.Pose) {
+    option (google.api.http) = {
+      get: "/v1/navigation/destination"
+    };
+  }
+
+  // LOVOT の目的地を設定する
+  rpc SetDestination(lovot.navigation.SetDestinationRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/navigation/destination"
+      body: "*"
+    };
+  }
+
+  // LOVOT の目的地を削除する
+  rpc DeleteDestination(lovot.navigation.DeleteDestinationRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/navigation/destination"
+    };
+  }
+}

@@ -14,14 +14,16 @@ from lovot_slam.env import (GRPC_MAX_RECEIVE_MESSAGE_LENGTH,
 from lovot_slam.exploration.exploration_status import ExplorationStatusMonitor
 from lovot_slam.exploration.exploration_token import ExplorationTokenManager
 from lovot_slam.flags.debug_params import PARAM_ALWAYS_BUILD_MAP_ON_BUILDER
-from lovot_slam.map_build.map_build import MapBuilder, MergeMapsOption
-from lovot_slam.map_build.request_queue import BuildOption, BuildSingleMapOption, RequestQueue, RequestTypes
+from lovot_slam.map_build.map_build import MapBuilder
+from lovot_slam.map_build.request_queue import (MergeMapsOption,
+                                                BuildOption, BuildSingleMapOption, 
+                                                RequestQueue, RequestTypes)
 from lovot_slam.model import LovotModel, NestModel
 from lovot_slam.redis.keys import INTENTION_KEY, PHYSICAL_STATE_KEY
 from lovot_slam.service.navigation_service import serve_navigation_service
 from lovot_slam.slam_manager import SlamManager
 from lovot_slam.slam_servicer import SlamServicer
-from lovot_slam.utils.map_utils import MAXIMUM_MERGE_NUMBER, MapSetUtils
+from lovot_map.utils.map_utils import MAXIMUM_MERGE_NUMBER, MapSetUtils
 from lovot_slam.utils.unwelcomed_area import set_unwelcomed_area_metric
 from lovot_slam.utils.segmentation_monitor import SegmentationUpdater
 

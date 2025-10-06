@@ -1,13 +1,13 @@
 import json
 from logging import getLogger
 
-import trio
+import anyio
 
 from lovot_slam import ContextMixin
 from lovot_slam.env import MAP_2DMAP, data_directories
 from lovot_slam.utils.exceptions import SlamProcedureCallError, SlamTransferError
 from lovot_slam.utils.file_util import remove_directory_if_exists
-from MLaNpy.lovot_map.rosmap import RosMap
+from lovot_map.rosmap import RosMap
 from lovot_slam.utils.segmentation import SEGMENTATION_VERSION, rebuild_segmentation
 from lovot_slam.utils.unwelcomed_area import calc_unwelcomed_area_hash
 
@@ -54,10 +54,10 @@ class SegmentationUpdater(SegmentationMonitor):
 
     def __init__(self, map_utils, spot_utils):
         super().__init__(map_utils, spot_utils)
-        self.cancel_scope = trio.CancelScope()
+        self.cancel_scope = anyio.CancelScope()
         self._active = True
         self._forcing = False
-        self._activation_event = trio.Event()
+        self._activation_event = anyio.Event()
 
     def update(self):
         """
@@ -126,7 +126,7 @@ class SegmentationUpdater(SegmentationMonitor):
 
         while True:
             if not self._active:
-                self._activation_event = trio.Event()
+                self._activation_event = anyio.Event()
                 await self._activation_event.wait()
 
             try:
@@ -134,9 +134,9 @@ class SegmentationUpdater(SegmentationMonitor):
                     if self._should_update():
                         self.update()
                     self._forcing = False
-                    await trio.sleep(180)
+                    await anyio.sleep(180)
             finally:
-                self.cancel_scope = trio.CancelScope()
+                self.cancel_scope = anyio.CancelScope()
 
 
 class SegmentationDownloader(SegmentationMonitor, ContextMixin):
@@ -144,7 +144,7 @@ class SegmentationDownloader(SegmentationMonitor, ContextMixin):
 
     def __init__(self, map_utils, spot_utils):
         super().__init__(map_utils, spot_utils)
-        self._forced_event = trio.Event()
+        self._forced_event = anyio.Event()
         self._remove_flag = False
 
     def force(self):
@@ -195,7 +195,7 @@ class SegmentationDownloader(SegmentationMonitor, ContextMixin):
                 else:
                     await self._download()
                 forced = False
-            with trio.move_on_after(60):
-                self._forced_event = trio.Event()
+            with anyio.move_on_after(60):
+                self._forced_event = anyio.Event()
                 await self._forced_event.wait()
                 forced = True

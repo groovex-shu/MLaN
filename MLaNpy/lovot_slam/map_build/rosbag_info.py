@@ -1,7 +1,7 @@
 import subprocess
 from logging import getLogger
 
-import trio
+import anyio
 import yaml
 
 _logger = getLogger(__name__)
@@ -12,9 +12,8 @@ async def is_camera_info_recorded(bag_file: str) -> bool:
     rostopic named `/depth/camera_info` with type of `sensor_msgs/CameraInfo` is recorded.
     """
     cmd = ['rosbag', 'info', '-y', str(bag_file)]
-    proc = await trio.run_process(cmd,
-                                  capture_stdout=True,
-                                  capture_stderr=subprocess.DEVNULL)
+    proc = await anyio.run_process(cmd,
+                                    check=False)
     try:
         info = yaml.safe_load(proc.stdout.decode())
     except yaml.YAMLError:

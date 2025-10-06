@@ -33,16 +33,16 @@ class MapBuildAttemptResultsMetric:
     _LTM_CONTINUOUS_FAIL_COUNTS_KEY = 'slam:map_build:continuous_fail_counts'
 
     def __init__(self) -> None:
-        self._attempt_metric = prometheus_client.Counter(
-            'localization_map_build_attempt_count',
-            'Attempt count of map build')
-        self._success_metric = prometheus_client.Counter(
-            'localization_map_build_success_count',
-            'Success count of map build')
-        self._failure_metric = prometheus_client.Counter(
-            'localization_map_build_failure_count',
-            'Failure count of map build',
-            labelnames=['target', 'status'])
+        # self._attempt_metric = prometheus_client.Counter(
+        #     'localization_map_build_attempt_count',
+        #     'Attempt count of map build')
+        # self._success_metric = prometheus_client.Counter(
+        #     'localization_map_build_success_count',
+        #     'Success count of map build')
+        # self._failure_metric = prometheus_client.Counter(
+        #     'localization_map_build_failure_count',
+        #     'Failure count of map build',
+        #     labelnames=['target', 'status'])
 
         self._ltm_client = create_ltm_client()
 
@@ -81,15 +81,16 @@ class MapBuildAttemptResultsMetric:
         self._clear_continuous_fail_counts()
 
     def attempt(self) -> None:
-        self._attempt_metric.inc()
+        # self._attempt_metric.inc()
+        pass
 
     def success(self) -> None:
-        self._success_metric.inc()
+        # self._success_metric.inc()
         self._clear_continuous_fail_counts()
 
     def fail(self, is_single: bool, status: NestSlamState):
         target = 'single' if is_single else 'multiple'
-        self._failure_metric.labels(target=target, status=str(status)).inc()
+        # self._failure_metric.labels(target=target, status=str(status)).inc()
 
         # Increment the persistent counter for each build step.
         key = f'{target}_{status}'

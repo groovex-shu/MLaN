@@ -11,20 +11,20 @@ import numpy as np
 import prometheus_client
 from google.protobuf import empty_pb2
 
-from lovot_apis.lovot_spike_svcs.slam.slam_pb2 import (Area, CheckExploreRightsResponse, Coordinate,
+from lovot_slam.protobufs.slam_pb2 import (Area, CheckExploreRightsResponse, Coordinate,
                                                        DownloadFileRequest, DownloadFileResponse, FileInformation,
                                                        GetFrontierResponse, GetLatestMapResponse, GetSpotsResponse,
                                                        GetUnwelcomedAreaResponse, ListMapResponse, PullMapResponse,
                                                        PushBagResponse, Spot, UploadFileRequest, UploadFileResponse)
-from lovot_apis.lovot_spike_svcs.slam.slam_pb2_grpc import SlamServicer as ISlamServicer
+from lovot_slam.protobufs.slam_pb2_grpc import SlamServicer as ISlamServicer
 
-from lovot_slam.env import GRPC_STREAM_CHUNK_SIZE, MAP_ID, data_directories
-from lovot_slam.exploration import ExplorationStatusMonitor
+from lovot_slam.env import GRPC_STREAM_CHUNK_SIZE, MAP_ID, data_directories, redis_keys
+from lovot_slam.exploration.exploration_status import ExplorationStatusMonitor
 from lovot_slam.exploration.exploration_token import MAX_DAILY_TOKEN, ExplorationTokenManager
 from lovot_slam.map_build.request_queue import BuildSingleMapOption, RequestQueue, RequestTypes
-from lovot_slam.redis import create_ltm_client, redis_keys
+from lovot_slam.redis.clients import create_ltm_client
 from lovot_slam.utils.file_util import get_file_md5sum, remove_file_if_exists, sync_to_disk, unzip_archive, zip_archive
-from lovot_slam.utils.map_utils import MapUtils
+from lovot_map.utils.map_utils import MapUtils
 from lovot_slam.utils.segmentation import validate_segmentation_metadata
 
 logger = getLogger(__name__)

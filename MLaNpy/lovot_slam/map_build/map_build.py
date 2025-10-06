@@ -6,21 +6,22 @@ from logging import getLogger
 from pathlib import Path
 from typing import Callable, Optional
 
+import anyio
 import prometheus_client
-import trio
-from trio_util import AsyncBool, AsyncValue
 
-from lovot_slam.env import MAP_FEATUREMAP, MAP_STATISTICS_YAML, NestSlamState, SlamState, data_directories
+from lovot_slam.env import (MAP_FEATUREMAP, MAP_STATISTICS_YAML, 
+                            NestSlamState, 
+                            SlamState, data_directories, redis_keys)
 from lovot_slam.map_build.map_build_metrics import MapBuildAttemptResultsMetric
 from lovot_slam.map_build.maplab_map_stats import MaplabMapStatsParser
 from lovot_slam.map_build.request_queue import MergeMapsOption, RequestQueue
 from lovot_slam.map_build.rosbag_info import is_camera_info_recorded
 from lovot_slam.model import Model
-from lovot_slam.redis import create_stm_client, redis_keys
+from lovot_slam.redis.clients import create_stm_client
 from lovot_slam.subprocess.subprocess import BuildMapSubprocess
 from lovot_slam.utils.exceptions import SlamBuildMapError, SlamError
 from lovot_slam.utils.file_util import sync_to_disk
-from lovot_slam.utils.map_utils import BagUtils, MapUtils, SpotUtils
+from lovot_map.utils.map_utils import BagUtils, MapUtils, SpotUtils
 
 _logger = getLogger(__name__)
 
@@ -112,8 +113,8 @@ class MapBuilder:
         self.processing_bag_names = []
 
         # map build state
-        self._is_processing_event = AsyncBool(False)
-        self._state_event: AsyncValue[Optional[SlamState]] = AsyncValue(None)
+        self._is_processing_event = False
+        self._state_event: Optional[SlamState] = None
         self._change_state(NestSlamState.IDLE)
 
         self._map_build_metrics = MapBuildAttemptResultsMetric()
@@ -126,17 +127,17 @@ class MapBuilder:
         return self._map_build_metrics
 
     @property
-    def is_processing_event(self) -> AsyncBool:
+    def is_processing_event(self) -> bool:
         return self._is_processing_event
 
     def is_processing_map(self) -> bool:
-        return self._is_processing_event.value
+        return self._is_processing_event
 
     def _is_processing_single_mission_map(self) -> bool:
         return self.processing_bag_name == self.processing_map_name
 
     def _change_state(self, state: SlamState) -> None:
-        self._state_event.value = state
+        self._state_event = state
         self._redis_stm.set(redis_keys.state, str(state.value))
         self._redis_stm.set(redis_keys.is_busy, str(state != NestSlamState.IDLE))
 
@@ -161,7 +162,7 @@ class MapBuilder:
             start_metrics.start()
 
     def _change_state_and_record_metrics(self, state: NestSlamState) -> None:
-        self._record_processing_duration(self._state_event.value, state)
+        self._record_processing_duration(self._state_event, state)
         self._change_state(state)
 
     def remove_unused_resources(self) -> None:
@@ -195,7 +196,7 @@ class MapBuilder:
         if converted_bag.exists():
             _logger.debug(f'converted bag of {self.processing_bag_name} already exists. '
                           'skip converting bag.')
-            await trio.sleep(0)
+            await anyio.sleep(0)
             return
 
         try:
@@ -209,7 +210,7 @@ class MapBuilder:
             self._change_state_and_record_metrics(NestSlamState.BUILD_ERROR)
             raise SlamBuildMapError
         finally:
-            with trio.CancelScope(shield=True):
+            with anyio.CancelScope(shield=True):
                 await self._build_map_process.stop_process_and_wait()
 
         if not converted_bag.exists():
@@ -238,7 +239,7 @@ class MapBuilder:
         if diminished_bag.exists():
             _logger.debug(f'diminished bag of {self.processing_bag_name} already exists. '
                           'skip diminishing bag.')
-            await trio.sleep(0)
+            await anyio.sleep(0)
             return
 
         try:
@@ -253,7 +254,7 @@ class MapBuilder:
             self._change_state_and_record_metrics(NestSlamState.BUILD_ERROR)
             raise SlamBuildMapError
         finally:
-            with trio.CancelScope(shield=True):
+            with anyio.CancelScope(shield=True):
                 await self._build_map_process.stop_process_and_wait()
 
         if not diminished_bag.exists():
@@ -287,7 +288,7 @@ class MapBuilder:
             self._change_state_and_record_metrics(NestSlamState.BUILD_ERROR)
             raise SlamBuildMapError
         finally:
-            with trio.CancelScope(shield=True):
+            with anyio.CancelScope(shield=True):
                 await self._build_map_process.stop_process_and_wait()
 
         # remove diminish bag
@@ -307,7 +308,7 @@ class MapBuilder:
         if self._map_utils.check_feature_map(self.processing_map_name):
             _logger.debug(f'feature map of {self.processing_map_name} already exists. '
                           'skip building feature map.')
-            await trio.sleep(0)
+            await anyio.sleep(0)
             return
 
         try:
@@ -320,7 +321,7 @@ class MapBuilder:
             _logger.error('failed to start building feature map.')
             raise SlamBuildMapError
         finally:
-            with trio.CancelScope(shield=True):
+            with anyio.CancelScope(shield=True):
                 await self._build_map_process.stop_process_and_wait()
 
         if not self._map_utils.check_feature_map(self.processing_map_name, verbose=True):
@@ -358,7 +359,7 @@ class MapBuilder:
         else:
             _logger.info('scaling feature map subprocess finished. -> write to lovot_slam.yaml')
         finally:
-            with trio.CancelScope(shield=True):
+            with anyio.CancelScope(shield=True):
                 await self._build_map_process.stop_process_and_wait()
 
         # Check subprocess result.
@@ -390,7 +391,7 @@ class MapBuilder:
         if self._map_utils.check_dense_map(self.processing_map_name):
             _logger.debug(f'dense of {self.processing_map_name} already existed. '
                           'skip building dense map.')
-            await trio.sleep(0)
+            await anyio.sleep(0)
             return
 
         try:
@@ -409,7 +410,7 @@ class MapBuilder:
             _logger.error('failed to start building dense map.')
             raise SlamBuildMapError
         finally:
-            with trio.CancelScope(shield=True):
+            with anyio.CancelScope(shield=True):
                 await self._build_map_process.stop_process_and_wait()
         
         dense_map_availability = self._map_utils.check_dense_map(self.processing_map_name, verbose=True)
@@ -447,7 +448,7 @@ class MapBuilder:
             _logger.error('failed to start merging feature maps.')
             raise SlamBuildMapError
         finally:
-            with trio.CancelScope(shield=True):
+            with anyio.CancelScope(shield=True):
                 await self._build_map_process.stop_process_and_wait()
 
         if not self._map_utils.check_feature_map(self.processing_map_name, verbose=True):
@@ -481,7 +482,7 @@ class MapBuilder:
             _logger.error('failed to start building dense map.')
             raise SlamBuildMapError
         finally:
-            with trio.CancelScope(shield=True):
+            with anyio.CancelScope(shield=True):
                 await self._build_map_process.stop_process_and_wait()
 
         if not self._map_utils.check_dense_map(self.processing_map_name, verbose=True) \
@@ -578,7 +579,7 @@ class MapBuilder:
 
 
         try:
-            self._is_processing_event.value = True
+            self._is_processing_event = True
             self._initialize_build_single_mission_map(map_name)
             await build_map_func(self._convert_bag, NestSlamState.BAG_CONVERSION)
             # single mission map
@@ -599,13 +600,13 @@ class MapBuilder:
         except SlamBuildMapError:
             _logger.error(
                 'building single mission map finished without map completed.')
-            self._map_build_metrics.fail(is_single=True, status=self._state_event.value)
+            self._map_build_metrics.fail(is_single=True, status=self._state_event)
             self.remove_unused_resources()
             return None
         else:
             return merge_option
         finally:
-            self._is_processing_event.value = False
+            self._is_processing_event = False
             self._change_state_and_record_metrics(NestSlamState.IDLE)
 
     async def build_merged_map(self, option: MergeMapsOption) -> bool:
@@ -621,7 +622,7 @@ class MapBuilder:
         result = True
 
         try:
-            self._is_processing_event.value = True
+            self._is_processing_event = True
             # merged map
             await build_map_func(partial(self._merge_feature_maps, option),
                                  NestSlamState.BUILD_FEATURE_MAP)
@@ -633,11 +634,11 @@ class MapBuilder:
             _logger.error(
                 'building merged map finished without map completed.')
             self._map_build_metrics.fail(
-                is_single=False, status=self._state_event.value)
+                is_single=False, status=self._state_event)
             result = False
         finally:
             self.remove_unused_resources()
-            self._is_processing_event.value = False
+            self._is_processing_event = False
             self._change_state_and_record_metrics(NestSlamState.IDLE)
 
         return result

@@ -1,21 +1,21 @@
 import socket
 from logging import getLogger
 
-import purerpc
+import anyio
+import grpc
 import redis
-import trio
 from google.protobuf import empty_pb2
 
-from lovot_apis.lovot.navigation.domain_event_pb2 import HomeMapEvent, SpotEvent, UnwelcomedAreaEvent
-from lovot_apis.lovot.navigation.navigation_pb2 import Spot, UnwelcomedArea
-from lovot_apis.lovot.navigation.rpc_pb2 import (DeleteDestinationRequest, ResetMapRequest, SetDestinationRequest,
-                                                 SetSpotCoordinateRequest, SetUnwelcomedAreaRequest)
-from lovot_apis.lovot_app_api.navigation_grpc import NavigationServiceServicer
+from lovot_nav.protobufs.domain_event_pb2 import HomeMapEvent, SpotEvent, UnwelcomedAreaEvent
+from lovot_nav.protobufs.navigation_pb2 import Spot, UnwelcomedArea
+from lovot_nav.protobufs.rpc_pb2 import (DeleteDestinationRequest, ResetMapRequest, SetDestinationRequest,
+                                         SetSpotCoordinateRequest, SetUnwelcomedAreaRequest)
+from lovot_nav.protobufs.app_navigation_pb2_grpc import NavigationServiceServicer, add_NavigationServiceServicer_to_server
 
+from lovot_slam.env import redis_keys
 from lovot_slam.client.agent_client import upload_data_to_cloud
 from lovot_slam.redis.clients import create_ltm_client, create_stm_client
-from lovot_slam.redis.keys import redis_keys
-from lovot_slam.service.purerpc_server import Server
+
 
 # Constants
 _NAVIGATION_SERVICE_PORT = 39050
@@ -37,10 +37,9 @@ class NavigationServiceImpl(NavigationServiceServicer):
     Not implemented methods will raise NotImplementedError.
     """
 
-    def __init__(self, reset_func, nursery) -> None:
+    def __init__(self, reset_func) -> None:
         if reset_func:
             self._reset_func = reset_func
-        self._nursery = nursery
         self._stm = create_stm_client()
         self._ltm = create_ltm_client()
 
@@ -64,7 +63,7 @@ class NavigationServiceImpl(NavigationServiceServicer):
         
         res = await upload_data_to_cloud("navigation/home-map-event", evt.SerializePartialToString())
         if not res:
-            raise purerpc.UnavailableError("Failed to upload data to cloud")
+            raise grpc.aio.AbortError(grpc.StatusCode.UNAVAILABLE, "Failed to upload data to cloud", None, None)
 
         # Local
         # Reset the map by event listener at main thread (SLAM の地図をリセットする)
@@ -91,10 +90,10 @@ class NavigationServiceImpl(NavigationServiceServicer):
 
         # check map existence & map_id (現状では1つしか地図を扱わない)
         if self._ltm.exists(redis_keys.map) == 0:
-            raise purerpc.NotFoundError("No map exists")
+            raise grpc.aio.AbortError(grpc.StatusCode.NOT_FOUND, "No map exists", None, None)
 
         if map_id != FIXED_MAPID:
-            raise purerpc.NotFoundError(f"map not found: {map_id}")
+            raise grpc.aio.AbortError(grpc.StatusCode.NOT_FOUND, f"map not found: {map_id}", None, None)
 
         # create unwelcomed area
         unwelcomed_area = UnwelcomedArea(
@@ -115,7 +114,7 @@ class NavigationServiceImpl(NavigationServiceServicer):
         
         res = await upload_data_to_cloud("navigation/unwelcomed-area-event", evt.SerializePartialToString())
         if not res:
-            raise purerpc.UnavailableError("Failed to upload data to cloud")
+            raise grpc.aio.AbortError(grpc.StatusCode.UNAVAILABLE, "Failed to upload data to cloud", None, None)
 
         # Local
         unwelcomed_area_key = redis_keys.unwelcomed_area
@@ -134,13 +133,13 @@ class NavigationServiceImpl(NavigationServiceServicer):
 
         # check map existence, map_id & spot name (現状では1つしか地図を扱わない)
         if self._ltm.exists(redis_keys.map) == 0:
-            raise purerpc.NotFoundError("No map exists")
+            raise grpc.aio.AbortError(grpc.StatusCode.NOT_FOUND, "No map exists", None, None)
 
         if map_id != FIXED_MAPID:
-            raise purerpc.NotFoundError(f"map not found: {map_id}")
+            raise grpc.aio.AbortError(grpc.StatusCode.NOT_FOUND, f"map not found: {map_id}", None, None)
 
         if spot_name != FIXED_SPOTNAME:
-            raise purerpc.InvalidArgumentError(f"spot name not supported: {spot_name}")
+            raise grpc.aio.AbortError(grpc.StatusCode.INVALID_ARGUMENT, f"spot name not supported: {spot_name}", None, None)
 
         spot = Spot(
             colony_id=colony_id,
@@ -160,7 +159,7 @@ class NavigationServiceImpl(NavigationServiceServicer):
         
         res = await upload_data_to_cloud("navigation/spot-event", evt.SerializePartialToString())
         if not res:
-            raise purerpc.UnavailableError("Failed to upload data to cloud")
+            raise grpc.aio.AbortError(grpc.StatusCode.UNAVAILABLE, "Failed to upload data to cloud", None, None)
 
         # Local
         spot_key = redis_keys.spot(spot_name)
@@ -180,7 +179,7 @@ class NavigationServiceImpl(NavigationServiceServicer):
     async def SetDestination(self, request: SetDestinationRequest) -> empty_pb2.Empty:
         coordinate = request.destination
         if coordinate is None:
-            raise purerpc.StatusCode.INVALID_ARGUMENT("destination is required")
+            raise grpc.aio.AbortError(grpc.StatusCode.INVALID_ARGUMENT, "destination is required", None, None)
 
         coordinate_format = "{:.4f},{:.4f},{:.4f},{:.4f},{:.4f},{:.4f},{:.4f}"
         coordinate_str = coordinate_format.format(coordinate.px, coordinate.py, coordinate.pz,
@@ -191,7 +190,7 @@ class NavigationServiceImpl(NavigationServiceServicer):
             logger.info(f"Set destination: {coordinate_str}")
 
         except (redis.exceptions.RedisError) as redis_err:
-            raise purerpc.InternalError(f"failed on redis: {redis_err}")
+            raise grpc.aio.AbortError(grpc.StatusCode.INTERNAL, f"failed on redis: {redis_err}", None, None)
 
         return empty_pb2.Empty()
 
@@ -200,7 +199,7 @@ class NavigationServiceImpl(NavigationServiceServicer):
             self._stm.publish(DESTINATION_CHANNEL, "")
 
         except (redis.exceptions.RedisError) as redis_err:
-            raise purerpc.InternalError(f"failed on redis: {redis_err}")
+            raise grpc.aio.AbortError(grpc.StatusCode.INTERNAL, f"failed on redis: {redis_err}", None, None)
 
         return empty_pb2.Empty()
 
@@ -210,26 +209,28 @@ async def serve_navigation_service(reset_func = None, port: int = _NAVIGATION_SE
     It doesn't return until the server is stopped.
 
     example:
-        async with trio.open_nursery() as nursery:
-            nursery.start_soon(serve_navigation_service, 39050)
+        async with anyio.create_task_group() as tg:
+            tg.start_soon(serve_navigation_service, 39050)
     """
 
-    async with trio.open_nursery() as nursery:
-        # specify ipv4 host to make serve_async fail intentionally if the host cannot be resolved
-        # otherwise, it serves only on ipv6 and the client (lovot-agent) cannot connect to it
-        server = Server('0.0.0.0', port)
-        servicer = NavigationServiceImpl(reset_func, nursery)
-        server.add_service(servicer.service)
+    server = grpc.aio.server()
+    servicer = NavigationServiceImpl(reset_func)
+    add_NavigationServiceServicer_to_server(servicer, server)
 
-        retry_count = 0
-        while True:
-            try:
-                await server.serve_async()
-            except socket.gaierror as e:
-                logger.warning(f"Failed to start server: {e}")
+    # specify ipv4 host to make serve fail intentionally if the host cannot be resolved
+    # otherwise, it serves only on ipv6 and the client (lovot-agent) cannot connect to it
+    server.add_insecure_port(f'0.0.0.0:{port}')
 
-            await trio.sleep(1)
-
+    retry_count = 0
+    while True:
+        try:
+            await server.start()
+            logger.info(f"Starting gRPC server on 0.0.0.0:{port}...")
+            await server.wait_for_termination()
+            break
+        except socket.gaierror as e:
+            logger.warning(f"Failed to start server: {e}")
+            await anyio.sleep(1)
             retry_count += 1
             if retry_count > 10:
                 raise RuntimeError("Failed to start server")

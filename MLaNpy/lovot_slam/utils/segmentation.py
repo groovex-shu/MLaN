@@ -55,7 +55,7 @@ import numpy as np
 from scipy import ndimage
 from scipy.spatial import cKDTree as KDTree
 
-from ...lovot_map.rosmap import RosMap, create_kernel
+from lovot_map.rosmap import RosMap, create_kernel
 from .unwelcomed_area import Polygon, calc_unwelcomed_area_hash, rasterize_unwelcomed_area
 
 logger = getLogger(__name__)

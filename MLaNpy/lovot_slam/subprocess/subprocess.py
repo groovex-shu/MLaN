@@ -2,10 +2,9 @@ import pathlib
 import signal
 import subprocess
 from logging import getLogger
-from typing import List, Optional
+from typing import AsyncIterator, List, Optional
 
-import trio
-from trio_util import periodic
+import anyio
 
 from lovot_slam.env import ENV_PATH, OMNI_CONVERSION_YAML
 from lovot_slam.flags.cloudconfig import (
@@ -98,23 +97,23 @@ class SubprocessBase:
         https://github.com/ros/ros_comm/blob/noetic-devel/tools/roslaunch/src/roslaunch/nodeprocess.py#L58:L59
         """
         if self._process is None:
-            await trio.sleep(0)
+            await anyio.sleep(0)
             return
         if self._process.poll() is not None:
-            await trio.sleep(0)
+            await anyio.sleep(0)
             # already terminated
             self.clear()
             return
 
         async def wait_for_termination() -> bool:
-            with trio.move_on_after(timeout) as cleanup_scope:
+            with anyio.move_on_after(timeout, shield=True):
                 # shield cancel scope, in order to ensure to terminate the process
                 # especially for the case when sigint/sigterm is called.
-                cleanup_scope.shield = True
-                async for _ in periodic(0.1):
+                while True:
                     if self._process.poll() is not None:
                         logger.info(f'{self._name} process terminated')
                         return True
+                    await anyio.sleep(0.1)
             return False
 
         try:
@@ -162,9 +161,10 @@ class SubprocessBase:
             raise SlamProcessError
 
     async def wait_for_termination(self):
-        async for _ in periodic(0.1):
+        while True:
             if not self.is_running():
                 return
+            await anyio.sleep(0.1)
 
 
 class BaseSubprocess(SubprocessBase):

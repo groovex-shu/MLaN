@@ -5,7 +5,7 @@ import datetime
 
 import anyio
 
-from lovot_slam.env import ROS_LOG_ROOT, data_directories
+from lovot_slam.env import ROS_LOG_ROOT, data_directories, redis_keys
 from lovot_slam.redis.clients import (create_ltm_client, 
                                       create_stm_client,
                                       create_async_stm_client,
@@ -31,7 +31,6 @@ class SlamManager:
         self.redis_ltm = create_ltm_client()
         self.aioredis_stm = create_async_stm_client()
         self.aioredis_ltm = create_async_ltm_client()
-        self.redis_keys = RedisKeyRepository()
 
         # async pubsub listener
         self.listener = self.aioredis_stm.pubsub()
@@ -79,10 +78,10 @@ class SlamManager:
         if err is not None:
             response += (' ' + str(err))
         response = response.strip()
-        self.redis_stm.publish(self.redis_keys.response, response)
+        self.redis_stm.publish(redis_keys.response, response)
 
     async def _monitor_command(self):
-        await self.listener.subscribe(self.redis_keys.command)
+        await self.listener.subscribe(redis_keys.command)
 
         while True:
             message = await self.listener.get_message(ignore_subscribe_messages=True, timeout=0.1)

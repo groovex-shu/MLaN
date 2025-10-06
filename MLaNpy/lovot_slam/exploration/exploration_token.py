@@ -10,7 +10,7 @@ from lovot_slam.flags.cloudconfig import CLOUDCONFIG_DISABLE_BUILD_MAP
 from lovot_slam.map_build.map_build_metrics import MapBuildAttemptResultsMetric
 from lovot_slam.map_build.request_queue import RequestQueue
 from lovot_slam.utils.file_util import get_directory_size
-from lovot_slam.utils.map_utils import MAX_DATA_DIR_SIZE, MapUtils
+from lovot_map.utils.map_utils import MAX_DATA_DIR_SIZE, MapUtils
 
 _logger = getLogger(__name__)
 

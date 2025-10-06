@@ -7,6 +7,7 @@ from lovot_slam.redis.clients import create_ltm_client
 from lovot_slam.redis.clients import REDIS_DB_DEVICE, REDIS_DB_STM, REDIS_HOST_DEVICE, REDIS_HOST_STM, REDIS_PORT_DEVICE, REDIS_PORT_STM
 from lovot_slam.redis.keys import COLONY_ID_KEY
 
+from lovot_slam.redis.keys import RedisKeyRepository
 from lovot_map.utils.map_dir import DataDirectories
 
 import redis
@@ -26,6 +27,8 @@ MAPSET_ROOT_DIR = pathlib.Path(os.getenv('LOCALIZATION_MAPSET_ROOT_DIR', '/data/
 
 DATA_DIR = pathlib.Path(os.getenv('LOCALIZATION_DATA_PATH', '/data/localization'))
 data_directories = DataDirectories(DATA_DIR)
+
+redis_keys = RedisKeyRepository()
 
 
 _SHARE_DIR = pathlib.Path(os.getenv('LOCALIZATION_SHARE_PATH',
@@ -55,7 +58,7 @@ SLAM_YAML_KEY_LOVOT_SLAM = 'lovot_slam'
 SLAM_YAML_KEY_DATE = 'date'
 SLAM_YAML_KEY_SOURCE = 'source'
 
-GRPC_PORT = '39092'
+GRPC_PORT = '50051'  # Changed from 39092 to avoid conflicts
 GRPC_TIMEOUT = 10
 GRPC_STREAM_CHUNK_SIZE = 1 * 1024 * 1024  # 1 MiB (allows 100 KiB / sec as min. bandwidth)
 GRPC_MAX_RECEIVE_MESSAGE_LENGTH = 3 * 1024 * 1024

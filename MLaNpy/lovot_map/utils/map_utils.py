@@ -21,10 +21,19 @@ from lovot_nav.protobufs.domain_event_pb2 import SpotEvent, UnwelcomedAreaEvent,
 from lovot_nav.protobufs.navigation_pb2 import Coordinate, Spot, UnwelcomedArea
 
 # from lovot_slam.client.agent_client import upload_data_to_cloud as upload_data_to_cloud_async
+# Mock function to skip actual cloud upload
+async def upload_data_to_cloud_async(endpoint: str, data: bytes) -> bool:
+    """Mock function that skips actual cloud upload for testing"""
+    await anyio.sleep(0)
+    logger.info(f"Mock upload to {endpoint} (skipped)")
+    return True
+
+
 from lovot_slam.env import (AREA_ID, CLOUD_HOME_MAP_EVENT_ENDPOINT, CLOUD_SPOT_EVENT_ENDPOINT,
                             CLOUD_UNWELCOMED_AREA_EVENT_ENDPOINT, CLOUD_UPLOAD_PORT, LOCALHOST, MAP_2DMAP,
                             MAP_FEATUREMAP, MAP_FEATUREMAP_MISSIONS_YAML, MAP_FEATUREMAP_SENSORS_YAML, MAP_ID,
-                            MAP_MD5SUM_YAML, MAP_SUMMARYMAP, SLAM_YAML, data_directories)
+                            MAP_MD5SUM_YAML, MAP_SUMMARYMAP, SLAM_YAML, 
+                            data_directories, redis_keys, colony_ID)
 from lovot_slam.feature_map.feature_map_vertices import (FeatureMapVertices, transform_points_between_maps,
                                                          transform_pose_between_maps)
 from lovot_slam.redis.clients import create_ltm_client, create_stm_client
@@ -751,34 +760,34 @@ class MapUtils:
         if rosmap.image is not None:
             self.redis_ltm.hset(redis_keys.map, mapping=rosmap.to_dict_for_redis())
 
-    # async def upload_map_to_cloud(self, rosmap: RosMap, ready: bool) -> bool:
-    #     """ lovot-agent 経由で地図をクラウドにアップロードする """
-    #     colony_id = get_colony_id()
-    #     if colony_id is None:
-    #         await anyio.sleep(0)
-    #         logger.error("colony_id not found")
-    #         return False
-    #     event = rosmap.to_event_proto(colony_id)
-    #     # the flag named 'completed' in the cloud is acutally 'ready' for use of the map,
-    #     # and is used as a flag to allow users to set unwelcomed area.
-    #     event.home_map.completed = ready
-    #     data = event.SerializeToString()
-    #     return await upload_data_to_cloud_async(CLOUD_HOME_MAP_EVENT_ENDPOINT, data)
+    async def upload_map_to_cloud(self, rosmap: RosMap, ready: bool) -> bool:
+        """ lovot-agent 経由で地図をクラウドにアップロードする """
+        colony_id = colony_ID
+        if colony_id is None:
+            await anyio.sleep(0)
+            logger.error("colony_id not found")
+            return False
+        event = rosmap.to_event_proto(colony_id)
+        # the flag named 'completed' in the cloud is acutally 'ready' for use of the map,
+        # and is used as a flag to allow users to set unwelcomed area.
+        event.home_map.completed = ready
+        data = event.SerializeToString()
+        return await upload_data_to_cloud_async(CLOUD_HOME_MAP_EVENT_ENDPOINT, data)
 
-    # async def reset_cloud_map(self) -> bool:
-    #     colony_id = get_colony_id()
-    #     if colony_id is None:
-    #         await anyio.sleep(0)
-    #         logger.error("colony_id not found")
-    #         return False
+    async def reset_cloud_map(self) -> bool:
+        colony_id = colony_ID
+        if colony_id is None:
+            await anyio.sleep(0)
+            logger.error("colony_id not found")
+            return False
 
-    #     evt = HomeMapEvent(
-    #         colony_id=colony_id,
-    #         map_id=MAP_ID,
-    #         event=HomeMapEvent.Event.home_map_reset,
-    #         home_map=None
-    #     )
-    #     return await upload_data_to_cloud_async("navigation/home-map-event", evt.SerializePartialToString())
+        evt = HomeMapEvent(
+            colony_id=colony_id,
+            map_id=MAP_ID,
+            event=HomeMapEvent.Event.home_map_reset,
+            home_map=None
+        )
+        return await upload_data_to_cloud_async("navigation/home-map-event", evt.SerializePartialToString())
 
     def reset_map_accuracy(self):
         """Remove the accuracy_map directory.

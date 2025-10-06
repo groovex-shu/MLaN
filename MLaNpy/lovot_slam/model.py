@@ -5,7 +5,7 @@ from typing import Optional
 
 from attr import define
 
-from lovot_slam.redis import create_device_client
+from lovot_slam.redis.clients import create_device_client
 from lovot_slam.redis.keys import DYNAMIC_VARIANT_TRACKING_MODULE_MODEL_KEY, ROBOT_MODEL_KEY
 from lovot_slam.utils import OrderedEnum
 
@@ -49,6 +49,9 @@ class NestModel(Model):
     def get():
         redis_device = create_device_client()
         model = redis_device.get(ROBOT_MODEL_KEY)
+        if model is None:
+            # Default to LN100 if model key is not set
+            return NestModel.LN100
         if model.startswith('ln101'):
             return NestModel.LN101
         if model.startswith('ln100'):

@@ -1,0 +1,127 @@
+syntax = "proto3";
+
+package lovot.navigation;
+
+import "common/go-proto-validators/validator.proto";
+import "google/protobuf/empty.proto";
+import "navigation.proto";
+
+option go_package = "github.com/groove-x/lovot-apis/lovot/navigation";
+
+
+message GetLovotPoseRequest {
+  string ghost_id = 1 [(validator.field) = { string_not_empty: true }];
+}
+
+message GetDestinationRequest {
+  string ghost_id = 1 [(validator.field) = { string_not_empty: true }];
+}
+
+message SetDestinationRequest {
+  string ghost_id = 1 [(validator.field) = { string_not_empty: true }];
+  // 目的地の座標
+  Coordinate destination = 2 [(validator.field) = { msg_exists: true }];
+}
+
+message DeleteDestinationRequest {
+  string ghost_id = 1 [(validator.field) = { string_not_empty: true }];
+}
+
+message GetMapIDsRequest {
+  string colony_id = 1 [(validator.field) = { string_not_empty: true }];
+}
+
+message GetMapIDsResponse {
+  string          colony_id = 1;
+  repeated string map_ids   = 2;
+}
+
+message GetMapRequest {
+  string colony_id = 1 [(validator.field) = { string_not_empty: true }];
+  string map_id    = 2 [(validator.field) = { string_not_empty: true }];
+}
+
+message ListProhibitedAreasRequest {
+  string colony_id = 1 [(validator.field) = { string_not_empty: true }];
+  string map_id    = 2 [(validator.field) = { string_not_empty: true }];
+}
+
+message ListSpotsRequest {
+  string colony_id = 1 [(validator.field) = { string_not_empty: true }];
+  string map_id    = 2 [(validator.field) = { string_not_empty: true }];
+}
+
+message ResetMapRequest {
+  string colony_id = 1 [(validator.field) = { string_not_empty: true }];
+  string map_id    = 2 [(validator.field) = { string_not_empty: true }];
+}
+
+message CreateProhibitedAreaRequest {
+  // コロニーの識別子
+  string colony_id = 1 [(validator.field) = { string_not_empty: true }];
+  // 地図の識別子。当面は "1" のみ
+  string map_id = 2 [(validator.field) = { string_not_empty: true }];
+  // 禁止エリアの幅
+  int32 width = 3 [(validator.field) = { int_gt: -1 }];
+  // 禁止エリアの高さ
+  int32 height = 4 [(validator.field) = { int_gt: -1 }];
+  // 禁止エリアの解像度
+  float resolution = 5 [(validator.field) = { float_gt: 0 }];
+  // 禁止エリアのデータ
+  string data = 6 [(validator.field) = { string_not_empty: true }];
+  // 禁止エリアの座標
+  Coordinate origin = 7 [(validator.field) = { msg_exists: true }];
+}
+
+message UpdateProhibitedAreaRequest {
+  // 禁止エリアの識別子
+  string area_id = 1 [(validator.field) = { string_not_empty: true }];
+  // コロニーの識別子
+  string colony_id = 2 [(validator.field) = { string_not_empty: true }];
+  // 地図の識別子。当面は "1" のみ
+  string map_id = 3 [(validator.field) = { string_not_empty: true }];
+  // 禁止エリアの幅
+  int32 width = 4 [(validator.field) = { int_gt: -1 }];
+  // 禁止エリアの高さ
+  int32 height = 5 [(validator.field) = { int_gt: -1 }];
+  // 禁止エリアの解像度
+  float resolution = 6 [(validator.field) = { float_gt: 0 }];
+  // 禁止エリアのデータ
+  string data = 7 [(validator.field) = { string_not_empty: true }];
+  // 禁止エリアの座標
+  Coordinate origin = 8 [(validator.field) = { msg_exists: true }];
+}
+
+message DeleteProhibitedAreaRequest {
+  string colony_id = 1 [(validator.field) = { string_not_empty: true }];
+  string map_id    = 2 [(validator.field) = { string_not_empty: true }];
+  string area_id   = 3 [(validator.field) = { string_not_empty: true }];
+}
+
+message SetUnwelcomedAreaRequest {
+  // 来ないでエリアの識別子。"1"のみ使用している
+  string area_id = 1 [(validator.field) = { string_not_empty: true }];
+  // コロニーの識別子
+  string colony_id = 2 [(validator.field) = { string_not_empty: true }];
+  // 地図の識別子。当面は "1" のみ
+  string map_id = 3 [(validator.field) = { string_not_empty: true }];
+  // 来ないでエリアのデータ
+  string data = 4 [(validator.field) = { string_not_empty: true }];
+}
+
+message SetSpotCoordinateRequest {
+  // コロニーの識別子
+  string colony_id = 1 [(validator.field) = { string_not_empty: true }];
+  // 地図の識別子。当面は "1" のみ
+  string map_id = 2 [(validator.field) = { string_not_empty: true }];
+  // スポットの名前: 当面は "entrance" のみ
+  string spot_name = 3 [(validator.field) = { string_not_empty: true }];
+  // スポットの座標
+  Coordinate coordinate = 4 [(validator.field) = { msg_exists: true }];
+}
+
+message DeleteSpotRequest {
+  string colony_id = 1 [(validator.field) = { string_not_empty: true }];
+  string map_id    = 2 [(validator.field) = { string_not_empty: true }];
+  string spot_name = 3 [(validator.field) = { string_not_empty: true }];
+}
